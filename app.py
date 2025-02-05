@@ -8,6 +8,7 @@ import joblib
 
 # Load mô hình đã huấn luyện
 model = tf.keras.models.load_model("model_pred_1h_3output.keras")
+model_6h = tf.keras.models.load_model("model_pred_6h_3output.keras")
 
 # Load StandardScaler
 scalers = []
@@ -45,7 +46,7 @@ async def predict(input_data: ModelInput):
 
         # Dự đoán với mô hình
         prediction_scaled = model.predict(input_array.reshape(1, 240, 1, 3))
-        prediction_scaled_6h = model.predict(input_array.reshape(1, 240, 1, 3))
+        prediction_scaled_6h = model_6h.predict(input_array.reshape(1, 240, 1, 3))
         # Đưa dự đoán về giá trị gốc bằng inverse_transform
         # prediction = sc.inverse_transform(prediction_scaled)
         predictions = []
