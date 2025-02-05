@@ -37,7 +37,7 @@ async def predict(input_data: ModelInput):
 
         # Áp dụng StandardScaler để chuẩn hóa đầu vào
         # input_scaled = sc.transform(input_array)
-
+        
         # input_scaled = sc.transform(input_array.reshape((240, 1)))
         for i in range(3):
             input_scaled = scalers[i].transform(input_array[:, :, i])
@@ -45,16 +45,20 @@ async def predict(input_data: ModelInput):
 
         # Dự đoán với mô hình
         prediction_scaled = model.predict(input_array.reshape(1, 240, 1, 3))
-
+        prediction_scaled_6h = model.predict(input_array.reshape(1, 240, 1, 3))
         # Đưa dự đoán về giá trị gốc bằng inverse_transform
         # prediction = sc.inverse_transform(prediction_scaled)
         predictions = []
+        predictions_6h = []
         for i in range(3):
             prediction = scalers[i].inverse_transform(prediction_scaled[:, :, i])
-            print(prediction_scaled)
+
+            # print(prediction_scaled)
             predictions.append(prediction[0].tolist()[0])
 
-        return {"prediction": predictions}
+            prediction_6h = scalers[i].inverse_transform(prediction_scaled_6h[:, :, i])
+            predictions_6h.append(prediction[0].tolist()[0])
+        return {"prediction_1h": predictions, "prediction_6h": predictions_6h}
         # print(predictions)
     except Exception as e:
         # print(e)
